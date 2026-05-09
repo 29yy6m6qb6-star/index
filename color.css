@@ -1,0 +1,339 @@
+button { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; margin: 5px; transition: transform 0.1s, opacity 0.1s, background-color 0.1s; color: white; }
+
+button:active { transform: scale(0.9); opacity: 0.8; }
+
+.blue { background-color: #3498db; }
+
+.purple {background-color: #9b59b6;}
+
+.red {background-color: #e74c3c;}
+
+.green {background-color: #2ecc71;}
+
+.orange {background-color: #e67e22;}
+
+.pink {background-color: #ff6b81;}
+
+.teal {background-color: #1abc9c;}
+
+.cyan {background-color: #00cec9;}
+
+.indigo {background-color: #3f51b5;}
+
+.lime {background-color: #a4e057;}
+
+.brown {
+  background-color: #8e6e53;
+}
+
+.gray {
+  background-color: #7f8c8d;
+}
+
+.dark {
+  background-color: #2d3436;
+  color: white;
+}
+
+.light {
+  background-color: #ecf0f1;
+  color: black;
+}
+
+.gold {
+  background-color: #f39c12;
+}
+
+.skyblue {
+  background-color: #87ceeb;
+}
+
+.navy {
+  background-color: #34495e;
+}
+
+.maroon {
+  background-color: #800000;
+}
+
+.olive {
+  background-color: #808000;
+  color: black;
+}
+
+.mint {
+  background-color: #98ff98;
+  color: black;
+}
+
+.lavender {
+  background-color: #e6e6fa;
+  color: black;
+}
+
+.beige {
+  background-color: #f5f5dc;
+  color: black;
+}
+
+.coral {
+  background-color: #ff7f50;
+}
+
+.salmon {
+  background-color: #fa8072;
+}
+
+.turquoise {
+  background-color: #40e0d0;
+  color: black;
+}
+
+.aqua {
+  background-color: #00ffff;
+  color: black;
+}
+
+.violet {
+  background-color: #8a2be2;
+}
+
+.crimson {
+  background-color: #dc143c;
+}
+
+.plum {
+  background-color: #dda0dd;
+  color: black;
+}
+
+.khaki {
+  background-color: #f0e68c;
+  color: black;
+}
+
+.silver {
+  background-color: #bdc3c7;
+  color: black;
+}
+
+.charcoal {
+  background-color: #2c3e50;
+  color: white;
+}
+
+.rose {
+  background-color: #ff007f;
+}
+
+.amber {
+  background-color: #ffbf00;
+  color: black;
+}
+
+.peach {
+  background-color: #ffe5b4;
+  color: black;
+}
+
+.ice {
+  background-color: #dff9fb;
+  color: black;
+}
+
+.grape {
+  background-color: #6f2da8;
+}
+
+.forest {
+  background-color: #228b22;
+}
+
+.sea {
+  background-color: #2e8b57;
+}
+
+.sunset {
+  background-color: #fd5e53;
+}
+
+.azure {
+  background-color: #007fff;
+}
+
+.sapphire {
+  background-color: #0f52ba;
+}
+
+.topaz {
+  background-color: #ffc87c;
+  color: black;
+}
+
+.ruby {
+  background-color: #e0115f;
+}
+
+.emerald {
+  background-color: #50c878;
+  color: black;
+}
+
+.jade {
+  background-color: #00a86b;
+}
+
+.peacock {
+  background-color: #1d7a8c;
+}
+
+.midnight {
+  background-color: #191970;
+}
+
+.steel {
+  background-color: #4682b4;
+}
+
+.cloud {
+  background-color: #ecf0f1;
+  color: black;
+}
+
+.snow {
+  background-color: #ffffff;
+  color: black;
+}
+
+.obsidian {
+  background-color: #0b0b0b;
+  color: white;
+}
+
+.ink {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.graphite {
+  background-color: #2f3640;
+  color: white;
+}
+
+.moss {
+  background-color: #8a9a5b;
+  color: black;
+}
+
+.fir {
+  background-color: #2e8b57;
+}
+
+.pine {
+  background-color: #01796f;
+}
+
+.lemon {
+  background-color: #fff44f;
+  color: black;
+}
+
+.banana {
+  background-color: #ffe135;
+  color: black;
+}
+
+.mango {
+  background-color: #ffb347;
+  color: black;
+}
+
+.cherry {
+  background-color: #d2042d;
+}
+
+.strawberry {
+  background-color: #fc5a8d;
+}
+
+.blueberry {
+  background-color: #4f86f7;
+}
+
+.grapefruit {
+  background-color: #fd736c;
+}
+
+.carrot {
+  background-color: #ed9121;
+}
+
+.pumpkin {
+  background-color: #ff7518;
+}
+
+.honey {
+  background-color: #f6c453;
+  color: black;
+}
+
+.cinnamon {
+  background-color: #d2691e;
+}
+
+.chocolate {
+  background-color: #7b3f00;
+}
+
+.mocha {
+  background-color: #6f4e37;
+}
+
+.earth {
+  background-color: #8b5a2b;
+}
+
+.sand {
+  background-color: #c2b280;
+  color: black;
+}
+
+.dust {
+  background-color: #d3d3d3;
+  color: black;
+}
+
+.smoke {
+  background-color: #95a5a6;
+}
+
+.fog {
+  background-color: #bdc3c7;
+  color: black;
+}
+
+.rain {
+  background-color: #5dade2;
+}
+
+.storm {
+  background-color: #34495e;
+}
+
+.volcano {
+  background-color: #e74c3c;
+}
+
+.lava {
+  background-color: #ff4500;
+}
+
+.glacier {
+  background-color: #a3d5ff;
+  color: black;
+}
+
+.arctic {
+  background-color: #dfe6e9;
+  color: black;
+}

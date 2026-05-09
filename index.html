@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ホーム</title>
+<link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="color.css">
+</head>
+<body>
+  <header>
+    <h1>website</h1>
+    <nav>
+      <a href="index.html">HOME</a> 
+      <a href="page101.html">Big</a>
+      <a href="page111.html">save</a>
+      <a href="page121.html">mike</a>
+      <a href="page131.html">clock</a>
+      <a href="page141.html">maps</a>
+      <a href="page151.html">change</a>
+      <a href="page161.html">PDF</a>
+    </nav>
+  </header>
+  <main>
+    <p>ボタンがあります！</p>
+    <button class="blue" onclick="sayHello()">クリックしてね</button>
+    <button class="purple" onclick="sayReally()">クリックしてね</button>
+    <button class="red" onclick="sayNo()">クリックしてね</button>
+    <button class="khaki" onclick="sayWarning()">クリックしてね</button>
+    <button class="green" onclick="downloadCode()">クリックしてね</button>
+  </main>
+  <script>
+    function sayHello() {
+      alert("OK");
+    }
+    function sayReally() {
+      alert("really");
+    }
+    function sayNo() {
+      alert("NG");
+    }
+    function sayWarning() {
+      alert("Warning");
+    }
+    function downloadCode() {
+      const code = document.documentElement.outerHTML;
+      const blob = new Blob([code], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "my_website.html";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
