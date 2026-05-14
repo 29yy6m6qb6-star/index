@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF</title>
+  <style>
+    #content {
+      display: none;
+      margin-top: 30px;
+    }
+
+    .box {
+      padding: 20px;
+      border: 2px solid #333;
+      display: inline-block;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+
+    a {
+      display: block;
+      margin-top: 10px;
+      font-size: 18px;
+      color: blue;
+    }
+  </style>
+
+  <script>
+    function login() {
+      const password = prompt("PDFページのパスワードを入力してください");
+
+      // ★ここがパスワード
+      if (password === "friend123") {
+        document.getElementById("content").style.display = "block";
+        document.getElementById("loginBox").style.display = "none";
+      } else {
+        alert("パスワードが違います");
+        document.body.innerHTML = "<h1>アクセス拒否</h1>";
+      }
+    }
+
+    window.onload = login;
+  </script>
+</head>
+
+<body>
+
+  <main>
+    <h2>🔒 PDFダウンロード</h2>
+
+    <div id="loginBox" class="box">
+      <p>認証中...</p>
+    </div>
+
+    <div id="content" class="box">
+      <h3>🎉 アクセス成功</h3>
+
+      <p>ここからダウンロード👇</p>
+
+      <!-- あなたのファイル名に合わせて変更OK -->
+      <a href="secret.zip" download>📦 パスワード付きZIP</a>
+    </div>
+
+  </main>
+
+</body>
+</html>
