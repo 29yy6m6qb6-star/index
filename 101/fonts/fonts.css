@@ -1,0 +1,121 @@
+/* fonts.css */
+
+
+@font-face {
+  font-family: "ElectroHarmonix";
+  src: url("font/electroharmonix.ttf") format("truetype");
+}
+
+
+
+@font-face {
+  font-family: "PermanentMarker";
+  src: url("font/PermanentMarker.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "RubikGemstones";
+  src: url("font/RubikGemstones.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "RubikMaps";
+  src: url("font/RubikMaps.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "RubikMaze";
+  src: url("font/RubikMaze.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "DancingScript";
+  src: url("font/DancingScript.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Pacifico";
+  src: url("font/Pacifico.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Sekuya";
+  src: url("font/Sekuya.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "lesle";
+  src: url("font/lesle.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "kipsol";
+  src: url("font/kipsol.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Emoji";
+  src: url("font/Emoji.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Yuji Mai";
+  src: url("font/YujiMai.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "DotGothic16";
+  src: url("font/DotGothic16.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Rampart One";
+  src: url("font/RampartOne.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Zen Antique";
+  src: url("font/ZenAntique.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Zen Kurenaido";
+  src: url("font/Zenkurenaido.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Klee One";
+  src: url("font/KleeOne.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Hachi Maru Pop";
+  src: url("font/HachiMaruPop.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Stick";
+  src: url("font/Stick.ttf") format("truetype");
+}
+
+
+@font-face {
+  font-family: "Rockel";
+  src: url("font/Rockel.ttf") format("truetype");
+}
+
+@font-face {
+   font-family: "MahjongTile";
+   src: url("font/GL-MahjongTile.ttf") format("truetype");
+}
