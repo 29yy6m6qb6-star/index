@@ -7,34 +7,50 @@
   <link rel="icon" type="image/png" href="favicon.png">
   <link rel="stylesheet" href="fonts/fonts.css">
   <style>
-    body {
-      font-family: sans-serif;
-      padding: 20px;
-    }
+    body { font-family: sans-serif; padding: 20px;}
 
-    #text {
-      margin-top: 20px;
-      font-size: 30px;
-      word-wrap: break-word;
-    }
+    #text {margin-top: 20px; font-size: 30px; word-wrap: break-word; }
   </style>
 </head>
 <body>
 
 <input type="text" id="textInput" placeholder="文字を入力してください Please enter characters">
 
-<select id="fontSelect">
+<select id="fontSelect"required>
   <optgroup label="Japanese">
-    <option value="'Klee One', sans-serif">Klee One</option>
-    <option value="sans-serif" selected>sans-serif</option>
-    <option value="serif">serif</option>
+    <option value="Klee One">Klee One</option>
+    <option value="sans-serif"selected>sans-serif</option>
+    <option value="'serif'">serif</option>
+    <option value="Yuji Mai" >Yuji Mai</option>
+    <option value="Stick">Stick</option>
+    <option value="Hachi Maru Pop">Hachi Maru Pop</option>
+    <option value="Zen Kurenaido">Zen Kurenaido</option>
+    <option value="Mochiy Pop P One">Mochiy Pop P One</option>
+    <option value="DotGothic16">DotGothic16</option>
+    <option value="Zen Antique">Zen Antique</option>
+    <option value="Rampart One">Rampart One</option>
   </optgroup>
-
+  
   <optgroup label="English">
-    <option value="cursive">cursive</option>
-    <option value="monospace">monospace</option>
+    <option value="PermanentMarker">PermanentMarker</option>
+    <option value="RubikGemstones">RubikGemstones</option>
+    <option value="RubikMaps">RubikMaps</option>
+    <option value="RubikMaze">RubikMaze</option>
+    <option value="DancingScript">DancingScript</option>
+    <option value="Pacifico">Pacifico</option>
+    <option value="Sekuya">Sekuya</option>
+    <option value="Rockel">Rockel</option>
+    <option value="'ElectroHarmonix'">ElectroHarmonix</option>
+  </optgroup>
+  
+  <optgroup label="other">
+    <option value="'lesle'">lesle</option>
+    <option value="'kipsol'">kipsol</option>
+    <option value="'Emoji'">Emoji</option>
+    <option value="'MahjongTile'">MahjongTile</option>
   </optgroup>
 </select>
+
 
 <br><br>
 
