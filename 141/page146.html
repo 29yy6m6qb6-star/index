@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>iOS9 Bicycle Map</title>
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+
+html, body {
+
+  margin: 0;
+  padding: 0;
+
+  width: 100%;
+  height: 100%;
+
+  overflow: hidden;
+
+  font-family:
+  Helvetica,
+  Arial,
+ sans-serif;
+}
+
+#map {
+
+  width: 100%;
+  height: 100%;
+}
+
+/* パネル */
+
+.bottom {
+
+  position: absolute;
+
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+
+  background:
+  rgba(255,255,255,0.96);
+
+  border-radius: 10px;
+
+  padding: 12px;
+
+  z-index: 1000;
+
+  box-shadow:
+  0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* 完全収納 */
+
+.bottom.hidden {
+
+  display: none;
+}
+
+/* フローティングボタン */
+
+.floatbtn {
+
+  position: absolute;
+
+  right: 12px;
+  bottom: 12px;
+
+  width: 52px;
+  height: 52px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #007AFF;
+
+  color: white;
+
+  font-size: 28px;
+
+  z-index: 1200;
+
+  box-shadow:
+  0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* 閉じる */
+
+.closebtn {
+
+  position: absolute;
+
+  top: 10px;
+  right: 10px;
+
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #007AFF;
+
+  color: white;
+
+  font-size: 18px;
+}
+
+input {
+
+  width: 100%;
+  height: 40px;
+
+  margin-top: 8px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  box-sizing: border-box;
+
+  padding-left: 10px;
+
+  font-size: 16px;
+
+  -webkit-appearance: none;
+}
+
+.routebtn {
+
+  width: 100%;
+  height: 42px;
+
+  margin-top: 10px;
+
+  border: none;
+
+  border-radius: 8px;
+
+  background: #007AFF;
+
+  color: white;
+
+  font-size: 16px;
+}
+
+.status {
+
+  margin-top: 8px;
+
+  font-size: 13px;
+
+  color: #666;
+}
+
+.info {
+
+  margin-top: 6px;
+
+  font-size: 14px;
+
+  color: #333;
+}
+
+.suggestions {
+
+  display: none;
+
+  margin-top: 4px;
+
+  border: 1px solid #ccc;
+
+  border-radius: 8px;
+
+  overflow: hidden;
+
+  background: white;
+
+  max-height: 120px;
+
+  overflow-y: auto;
+}
+
+.suggestion-item {
+
+  padding: 10px;
+
+  border-bottom: 1px solid #eee;
+
+  font-size: 14px;
+}
+
+.suggestion-item:last-child {
+
+  border-bottom: none;
+}
+
+.pickmode {
+
+  margin-top: 8px;
+
+  font-size: 12px;
+
+  color: #007AFF;
+}
+
+.title {
+
+  margin-bottom: 6px;
+
+  font-size: 18px;
+
+  font-weight: bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<!-- 開くボタン -->
+
+<button
+  class="floatbtn"
+  onclick="openPanel()"
+  id="openBtn">
+
+  ☰
+
+</button>
+
+<!-- パネル -->
+
+<div
+  class="bottom"
+  id="panel">
+
+  <button
+    class="closebtn"
+    onclick="closePanel()">
+
+    ×
+
+  </button>
+
+  <div class="title">
+    自転車ルート検索
+  </div>
+
+  <input
+    id="startInput"
+    type="text"
+    placeholder="出発地">
+
+  <div
+    id="startSuggestions"
+    class="suggestions">
+  </div>
+
+  <input
+    id="goalInput"
+    type="text"
+    placeholder="到着地">
+
+  <div
+    id="goalSuggestions"
+    class="suggestions">
+  </div>
+
+  <div
+    class="pickmode">
+
+    📱 iPod touch:
+    ダブルタップで地点選択<br>
+
+    💻 PC:
+    右クリックで地点選択
+
+  </div>
+
+  <button
+    class="routebtn"
+    onclick="searchRoute()">
+
+    自転車ルート表示
+
+  </button>
+
+  <div
+    class="status"
+    id="status">
+
+    準備完了
+
+  </div>
+
+  <div
+    class="info"
+    id="info">
+  </div>
+
+</div>
+
+<script>
+
+// 地図
+var map =
+L.map(
+  "map",
+  {
+    doubleClickZoom: false
+  }
+).setView(
+  [38.2682,140.8694],
+  13
+);
+
+// CARTO Light
+L.tileLayer(
+'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+{
+  attribution:
+  '&copy; OpenStreetMap contributors &copy; CARTO',
+
+  subdomains: 'abcd',
+
+  maxZoom: 20
+}
+).addTo(map);
+
+
+// パネル開閉
+
+function closePanel() {
+
+  document.getElementById(
+    "panel"
+  ).className =
+  "bottom hidden";
+
+  document.getElementById(
+    "openBtn"
+  ).style.display =
+  "block";
+}
+
+function openPanel() {
+
+  document.getElementById(
+    "panel"
+  ).className =
+  "bottom";
+
+  document.getElementById(
+    "openBtn"
+  ).style.display =
+  "none";
+}
+
+
+// 初期状態
+document.getElementById(
+  "openBtn"
+).style.display =
+"none";
+
+
+// 変数
+var routeLine = null;
+
+var startMarker = null;
+var goalMarker = null;
+
+var selectedStart = null;
+var selectedGoal = null;
+
+var activeInput = null;
+
+
+// ステータス
+function setStatus(text) {
+
+  document.getElementById(
+    "status"
+  ).innerHTML = text;
+}
+
+
+// 情報
+function setInfo(text) {
+
+  document.getElementById(
+    "info"
+  ).innerHTML = text;
+}
+
+
+// 入力欄選択
+document.getElementById(
+  "startInput"
+).onclick = function() {
+
+  activeInput = "start";
+
+  setStatus(
+    "地点を選択してください"
+  );
+};
+
+document.getElementById(
+  "goalInput"
+).onclick = function() {
+
+  activeInput = "goal";
+
+  setStatus(
+    "地点を選択してください"
+  );
+};
+
+
+// 地点選択
+function selectPoint(
+  lat,
+  lon
+) {
+
+  if (!activeInput) {
+
+    setStatus(
+      "先に入力欄を選択してください"
+    );
+
+    return;
+  }
+
+  reverseGeocode(
+    lat,
+    lon,
+    activeInput
+  );
+}
+
+
+// 📱 ダブルタップ
+map.on(
+  "dblclick",
+  function(e) {
+
+    selectPoint(
+      e.latlng.lat,
+      e.latlng.lng
+    );
+
+  }
+);
+
+
+// 💻 右クリック
+map.on(
+  "contextmenu",
+  function(e) {
+
+    selectPoint(
+      e.latlng.lat,
+      e.latlng.lng
+    );
+
+  }
+);
+
+
+// 逆ジオ
+function reverseGeocode(
+  lat,
+  lon,
+  type
+) {
+
+  setStatus(
+    "地点取得中..."
+  );
+
+  var url =
+  "https://nominatim.openstreetmap.org/reverse?format=json&lat="
+  + lat
+  + "&lon="
+  + lon;
+
+  var xhr =
+  new XMLHttpRequest();
+
+  xhr.open(
+    "GET",
+    url,
+    true
+  );
+
+  xhr.onreadystatechange =
+  function() {
+
+    if (
+      xhr.readyState === 4 &&
+      xhr.status === 200
+    ) {
+
+      var data =
+      JSON.parse(
+        xhr.responseText
+      );
+
+      var name =
+      data.display_name;
+
+      if (
+        type === "start"
+      ) {
+
+        document.getElementById(
+          "startInput"
+        ).value =
+        name;
+
+        selectedStart = {
+
+          lat: lat,
+          lon: lon
+        };
+
+      } else {
+
+        document.getElementById(
+          "goalInput"
+        ).value =
+        name;
+
+        selectedGoal = {
+
+          lat: lat,
+          lon: lon
+        };
+      }
+
+      setStatus(
+        "地点選択完了"
+      );
+    }
+  };
+
+  xhr.send();
+}
+
+
+// autocomplete
+setupAutocomplete(
+  "startInput",
+  "startSuggestions",
+  "start"
+);
+
+setupAutocomplete(
+  "goalInput",
+  "goalSuggestions",
+  "goal"
+);
+
+
+// autocomplete
+function setupAutocomplete(
+  inputId,
+  listId,
+  type
+) {
+
+  var input =
+  document.getElementById(
+    inputId
+  );
+
+  input.addEventListener(
+    "keyup",
+    function() {
+
+      var keyword =
+      input.value;
+
+      if (
+        keyword.length < 2
+      ) {
+
+        document.getElementById(
+          listId
+        ).style.display =
+        "none";
+
+        return;
+      }
+
+      searchCandidates(
+        keyword,
+        listId,
+        inputId,
+        type
+      );
+
+    }
+  );
+}
+
+
+// 候補検索
+function searchCandidates(
+  keyword,
+  listId,
+  inputId,
+  type
+) {
+
+  var url =
+  "https://nominatim.openstreetmap.org/search?format=json&limit=5&countrycodes=jp&q="
+  + encodeURIComponent(keyword);
+
+  var xhr =
+  new XMLHttpRequest();
+
+  xhr.open(
+    "GET",
+    url,
+    true
+  );
+
+  xhr.setRequestHeader(
+    "Accept-Language",
+    "ja"
+  );
+
+  xhr.onreadystatechange =
+  function() {
+
+    if (
+      xhr.readyState === 4 &&
+      xhr.status === 200
+    ) {
+
+      var data =
+      JSON.parse(
+        xhr.responseText
+      );
+
+      showSuggestions(
+        data,
+        listId,
+        inputId,
+        type
+      );
+    }
+  };
+
+  xhr.send();
+}
+
+
+// 候補表示
+function showSuggestions(
+  data,
+  listId,
+  inputId,
+  type
+) {
+
+  var box =
+  document.getElementById(
+    listId
+  );
+
+  box.innerHTML = "";
+
+  if (
+    data.length === 0
+  ) {
+
+    box.style.display =
+    "none";
+
+    return;
+  }
+
+  box.style.display =
+  "block";
+
+  for (
+    var i = 0;
+    i < data.length;
+    i++
+  ) {
+
+    (function(item) {
+
+      var div =
+      document.createElement(
+        "div"
+      );
+
+      div.className =
+      "suggestion-item";
+
+      div.innerHTML =
+      item.display_name;
+
+      div.onclick =
+      function() {
+
+        document.getElementById(
+          inputId
+        ).value =
+        item.display_name;
+
+        box.style.display =
+        "none";
+
+        var place = {
+
+          lat:
+          parseFloat(item.lat),
+
+          lon:
+          parseFloat(item.lon)
+        };
+
+        if (
+          type === "start"
+        ) {
+
+          selectedStart =
+          place;
+
+        } else {
+
+          selectedGoal =
+          place;
+        }
+
+        setStatus(
+          "候補選択完了"
+        );
+      };
+
+      box.appendChild(div);
+
+    })(data[i]);
+  }
+}
+
+
+// 検索
+function searchRoute() {
+
+  if (!selectedStart) {
+
+    setStatus(
+      "出発地を選択してください"
+    );
+
+    return;
+  }
+
+  if (!selectedGoal) {
+
+    setStatus(
+      "到着地を選択してください"
+    );
+
+    return;
+  }
+
+  getRoute(
+    selectedStart.lat,
+    selectedStart.lon,
+    selectedGoal.lat,
+    selectedGoal.lon
+  );
+}
+
+
+// ルート取得
+function getRoute(
+  startLat,
+  startLon,
+  goalLat,
+  goalLon
+) {
+
+  setStatus(
+    "ルート取得中..."
+  );
+
+  var url =
+  "https://router.project-osrm.org/route/v1/driving/"
+  + startLon + ","
+  + startLat
+  + ";"
+  + goalLon + ","
+  + goalLat
+  + "?overview=full"
+  + "&geometries=geojson"
+  + "&alternatives=false"
+  + "&continue_straight=true";
+
+  var xhr =
+  new XMLHttpRequest();
+
+  xhr.open(
+    "GET",
+    url,
+    true
+  );
+
+  xhr.onreadystatechange =
+  function() {
+
+    if (
+      xhr.readyState === 4 &&
+      xhr.status === 200
+    ) {
+
+      var data =
+      JSON.parse(
+        xhr.responseText
+      );
+
+      if (
+        data.routes &&
+        data.routes.length > 0
+      ) {
+
+        drawRoute(
+          startLat,
+          startLon,
+          goalLat,
+          goalLon,
+          data.routes[0]
+        );
+
+      } else {
+
+        setStatus(
+          "ルートなし"
+        );
+      }
+    }
+  };
+
+  xhr.send();
+}
+
+
+// 描画
+function drawRoute(
+  startLat,
+  startLon,
+  goalLat,
+  goalLon,
+  route
+) {
+
+  setStatus(
+    "ルート表示完了"
+  );
+
+  var km =
+  (
+    route.distance / 1000
+  ).toFixed(1);
+
+  var bikeMinutes =
+  Math.round(
+    (route.distance / 1000)
+    / 20
+    * 60
+  );
+
+  setInfo(
+    "距離: "
+    + km
+    + " km / 🚲 約 "
+    + bikeMinutes
+    + " 分"
+  );
+
+  if (routeLine) {
+
+    map.removeLayer(
+      routeLine
+    );
+  }
+
+  if (startMarker) {
+
+    map.removeLayer(
+      startMarker
+    );
+  }
+
+  if (goalMarker) {
+
+    map.removeLayer(
+      goalMarker
+    );
+  }
+
+  startMarker =
+  L.circleMarker(
+    [startLat,startLon],
+    {
+      radius: 8,
+      color: "#007AFF",
+      fillColor: "#007AFF",
+      fillOpacity: 1
+    }
+  ).addTo(map);
+
+  goalMarker =
+  L.circleMarker(
+    [goalLat,goalLon],
+    {
+      radius: 8,
+      color: "#34C759",
+      fillColor: "#34C759",
+      fillOpacity: 1
+    }
+  ).addTo(map);
+
+  var coords = [];
+
+  var geo =
+  route.geometry.coordinates;
+
+  for (
+    var i = 0;
+    i < geo.length;
+    i++
+  ) {
+
+    coords.push([
+      geo[i][1],
+      geo[i][0]
+    ]);
+  }
+
+  routeLine =
+  L.polyline(
+    coords,
+    {
+      color: "#007AFF",
+      weight: 5
+    }
+  ).addTo(map);
+
+  map.fitBounds(
+    routeLine.getBounds(),
+    {
+      padding: [40,40]
+    }
+  );
+}
+
+</script>
+
+</body>
+</html>
