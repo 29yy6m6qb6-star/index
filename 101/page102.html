@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>拡大</title>
+
+<link rel="icon" type="image/png" href="favicon.png">
+
+<link rel="stylesheet" href="fonts/fonts.css">
+  <style>
+    #text {
+      font-size: 48px;
+      margin-top: 20px;
+      user-select: none;      /* コピー禁止 */
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+    #slider {
+      width: 100%;
+    }
+    #textInput {
+      font-size: 20px;
+      padding: 6px;
+    }
+    #fontSelect {
+      font-size: 20px;
+      padding: 6px;
+    }
+   </style>
+</head>
+<body>
+
+
+<input type="text" id="textInput" placeholder="文字を入力してください Please enter characters">
+
+
+<select id="fontSelect"required>
+<optgroup label="Japanese">
+<option value="sans-serif"selected>sans-serif</option>
+<option value="'serif'">serif</option>
+<option value="Yuji Mai" >Yuji Mai</option>
+<option value="Klee One">Klee One</option>
+<option value="Stick">Stick</option>
+<option value="Hachi Maru Pop">Hachi Maru Pop</option>
+<option value="Zen Kurenaido">Zen Kurenaido</option>
+<option value="Mochiy Pop P One">Mochiy Pop P One</option>
+<option value="DotGothic16">DotGothic16</option>
+<option value="Zen Antique">Zen Antique</option>
+<option value="Rampart One">Rampart One</option>
+</optgroup>
+
+<optgroup label="English">
+<option value="PermanentMarker">PermanentMarker</option>
+<option value="RubikGemstones">RubikGemstones</option>
+<option value="RubikMaps">RubikMaps</option>
+<option value="RubikMaze">RubikMaze</option>
+<option value="DancingScript">DancingScript</option>
+<option value="Pacifico">Pacifico</option>
+<option value="Sekuya">Sekuya</option>
+<option value="Rockel">Rockel</option>
+<option value="'ElectroHarmonix'">ElectroHarmonix</option>
+</optgroup>
+
+<optgroup label="other">
+<option value="'lesle'">lesle</option>
+<option value="'kipsol'">kipsol</option>
+<option value="'Emoji'">Emoji</option>
+<option value="'MahjongTile'">MahjongTile</option>
+</optgroup>
+
+
+</select>
+
+
+<br><br>
+
+
+<input type="range" min="10" max="900" value="48" id="slider">
+
+
+<div id="text">文字を入力してください Please enter characters</div>
+
+
+<script>
+  const slider = document.getElementById('slider');
+  const text = document.getElementById('text');
+  const textInput = document.getElementById('textInput');
+  const fontSelect = document.getElementById('fontSelect');
+
+
+  // スライダーで文字サイズを変更
+  slider.addEventListener('input', () => {
+    text.style.fontSize = slider.value + 'px';
+  });
+
+
+  // テキスト入力で文字を変更
+  textInput.addEventListener('input', () => {
+    text.textContent = textInput.value || ' ';
+  });
+
+
+  // フォント変更
+  fontSelect.addEventListener('change', () => {
+    text.style.fontFamily = fontSelect.value;
+  });
+
+
+  // コピーを禁止
+  text.addEventListener('copy', (e) => {
+    e.preventDefault();
+  });
+</script>
+
+
+</body>
+</html>
