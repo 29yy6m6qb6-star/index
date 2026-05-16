@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>音付き運動タイマー</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  background: #111;
+  color: #fff;
+  padding-top: 40px;
+}
+
+input {
+  font-size: 1.2em;
+  width: 80px;
+  margin: 5px;
+  text-align: center;
+}
+
+#timer {
+  font-size: 4em;
+  margin: 20px;
+}
+
+button {
+  font-size: 1.2em;
+  margin: 10px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.start {
+  background: #28a745;
+  color: white;
+}
+
+.stop {
+  background: #dc3545;
+  color: white;
+}
+
+.reset {
+  background: #ffc107;
+  color: black;
+}
+</style>
+</head>
+
+<body>
+
+<h1>インターバルタイマー</h1>
+
+<div>
+  運動(秒):
+  <input id="work" type="number" value="30">
+
+  休憩(秒):
+  <input id="rest" type="number" value="10">
+
+  セット数:
+  <input id="sets" type="number" value="5">
+</div>
+
+<div id="mode">準備</div>
+<div id="timer">00:05</div>
+<div id="set">セット: 0 / 0</div>
+
+<button class="start" onclick="startTimer()">スタート</button>
+<button class="stop" onclick="stopTimer()">ストップ</button>
+<button class="reset" onclick="resetTimer()">リセット</button>
+
+<script>
+var interval;
+var timeLeft = 5;
+var isRunning = false;
+var isWork = true;
+var currentSet = 0;
+var totalSets = 0;
+var workTime = 30;
+var restTime = 10;
+var isCountdown = true;
+
+var audioCtx = null;
+
+// AudioContext初期化
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+// ゼロ埋め
+function pad(num) {
+  return num < 10 ? "0" + num : "" + num;
+}
+
+// ピッ音
+function beep(freq, duration) {
+
+  if (!audioCtx) {
+    return;
+  }
+
+  freq = freq || 800;
+  duration = duration || 150;
+
+  var osc = audioCtx.createOscillator();
+  var gain = audioCtx.createGain();
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.frequency.value = freq;
+  osc.type = "sine";
+
+  gain.gain.value = 1;
+
+  osc.start(0);
+
+  gain.gain.exponentialRampToValueAtTime(
+    0.001,
+    audioCtx.currentTime + duration / 1000
+  );
+
+  osc.stop(audioCtx.currentTime + duration / 1000);
+}
+
+function updateDisplay() {
+
+  var min = pad(Math.floor(timeLeft / 60));
+  var sec = pad(timeLeft % 60);
+
+  document.getElementById("timer").textContent =
+    min + ":" + sec;
+
+  if (isCountdown) {
+    document.getElementById("mode").textContent =
+      "開始まで...";
+  } else {
+    if (isWork) {
+      document.getElementById("mode").textContent =
+        "運動中";
+    } else {
+      document.getElementById("mode").textContent =
+        "休憩中";
+    }
+  }
+
+  document.getElementById("set").textContent =
+    "セット: " + currentSet + " / " + totalSets;
+}
+
+function startTimer() {
+
+  if (isRunning) {
+    return;
+  }
+
+  // iOS用 Audio unlock
+  initAudio();
+
+  workTime =
+    parseInt(document.getElementById("work").value, 10);
+
+  restTime =
+    parseInt(document.getElementById("rest").value, 10);
+
+  totalSets =
+    parseInt(document.getElementById("sets").value, 10);
+
+  isRunning = true;
+
+  interval = setInterval(function() {
+
+    timeLeft--;
+
+    // 残り5秒
+    if (timeLeft <= 5 && timeLeft > 0) {
+      beep(1000, 100);
+    }
+
+    // 半分
+    var currentPhaseTime;
+
+    if (isCountdown) {
+      currentPhaseTime = 5;
+    } else {
+      currentPhaseTime =
+        isWork ? workTime : restTime;
+    }
+
+    if (
+      timeLeft ===
+      Math.floor(currentPhaseTime / 2)
+    ) {
+      beep(1000, 150);
+    }
+
+    updateDisplay();
+
+    if (timeLeft <= 0) {
+
+      // 切り替え音
+      beep(600, 300);
+
+      if (isCountdown) {
+
+        isCountdown = false;
+        isWork = true;
+        currentSet = 1;
+        timeLeft = workTime;
+
+      } else {
+
+        if (isWork) {
+
+          isWork = false;
+          timeLeft = restTime;
+
+        } else {
+
+          currentSet++;
+
+          if (currentSet > totalSets) {
+
+            stopTimer();
+
+            beep(1200, 500);
+
+            alert("お疲れ！トレーニング完了");
+
+            return;
+          }
+
+          isWork = true;
+          timeLeft = workTime;
+        }
+      }
+    }
+
+  }, 1000);
+}
+
+function stopTimer() {
+  isRunning = false;
+  clearInterval(interval);
+}
+
+function resetTimer() {
+
+  stopTimer();
+
+  isCountdown = true;
+  currentSet = 0;
+  timeLeft = 5;
+
+  document.getElementById("timer").textContent =
+    "00:05";
+
+  document.getElementById("mode").textContent =
+    "準備";
+
+  document.getElementById("set").textContent =
+    "セット: 0 / 0";
+}
+
+updateDisplay();
+
+</script>
+
+</body>
+</html>
