@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>漢字辞典</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  background: #f5f5f5;
+}
+
+h1 {
+  text-align: center;
+}
+
+#search {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 300px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: white;
+}
+
+/* 📦 グリッド */
+#list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+/* 📘 カード */
+.kanji-card {
+  background: white;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.kanji-card:active {
+  transform: scale(0.98);
+}
+
+.kanji {
+  font-size: 40px;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* 🔴 赤シート（デフォルトは隠す） */
+.value {
+  color: transparent;
+  text-shadow: 0 0 8px rgba(0,0,0,0.25);
+}
+
+/* ✨ 表示状態 */
+.kanji-card.open .value {
+  color: inherit;
+  text-shadow: none;
+}
+
+/* 🌙 ダークモード */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #121212;
+    color: #eee;
+  }
+
+  h1 {
+    color: #fff;
+  }
+
+  #search {
+    background: #1e1e1e;
+    color: #fff;
+    border: 1px solid #333;
+  }
+
+  .kanji-card {
+    background: #1e1e1e;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<h1>📘 漢字辞典</h1>
+
+<input type="text" id="search" placeholder="検索">
+
+<div id="list"></div>
+
+<script src="kanji-data.js"></script>
+
+<script>
+const list = document.getElementById("list");
+const search = document.getElementById("search");
+
+function display(items) {
+  list.innerHTML = "";
+
+  items.forEach(k => {
+    const div = document.createElement("div");
+    div.className = "kanji-card";
+
+    div.innerHTML = `
+      <div class="kanji">${k.kanji}</div>
+
+      <p>音読み: <span class="value">${k.on}</span></p>
+      <p>訓読み: <span class="value">${k.kun}</span></p>
+      <p>意味: <span class="value">${k.meaning}</span></p>
+
+      <div class="hint">タップで表示/非表示</div>
+    `;
+
+    /* 🧠 状態で切り替え */
+    div.addEventListener("click", () => {
+      div.classList.toggle("open");
+    });
+
+    list.appendChild(div);
+  });
+}
+
+search.addEventListener("input", () => {
+  const keyword = search.value;
+
+  const filtered = kanjiData.filter(k =>
+    k.kanji.includes(keyword) ||
+    k.on.includes(keyword) ||
+    k.kun.includes(keyword) ||
+    k.meaning.includes(keyword)
+  );
+
+  display(filtered);
+});
+
+display(kanjiData);
+</script>
+
+</body>
+</html>
