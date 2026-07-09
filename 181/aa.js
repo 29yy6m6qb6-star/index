@@ -1,0 +1,1 @@
+const aData = [...adjective1, ...adjective2];

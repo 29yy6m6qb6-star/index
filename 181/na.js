@@ -1,0 +1,1 @@
+const nData = [...noun1, ...noun2, ...noun3, ...noun4, ...noun5, ...noun6, ...noun7, ...noun8, ...noun9, ...noun10];

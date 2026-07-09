@@ -1,0 +1,1 @@
+const vData = [...verb1, ...verb2, ...verb3, ...verb4];
