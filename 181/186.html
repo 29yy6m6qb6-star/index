@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>英語辞典</title>
+
+<style>
+/* ==========================================================================
+   ローカルのフォントファイル (KleeOne.ttf) を読み込む設定
+   ========================================================================== */
+@font-face {
+  font-family: 'Device Klee One';
+  src: url('KleeOne.ttf') format('truetype'); /* 同じフォルダにあるフォントファイルを指定 */
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Device Klee One', sans-serif; /* デバイスのKleeOneフォントを最優先に適用 */
+}
+
+/* ==========================================================================
+   全体の見た目（スタイルシート）
+   ========================================================================== */
+
+h1 { 
+  text-align:center; /* タイトルを画面中央に寄せる */
+}
+
+#search {
+  display:block;
+  margin:10px auto;  /* 入力欄を中央に配置 */
+  padding:10px;      /* 内側の余白 */
+  width:300px;       /* 横幅 */
+}
+
+#list {
+  display: grid;     /* グリッドレイアウトを採用 */
+  /* 画面幅に合わせて自動で並べる（最低200px幅、端数は均等に配分） */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;         /* カード同士の間隔 */
+}
+
+/* 単語を表示するカードの基本スタイル */
+.card {
+  background: white;
+  border-radius: 10px; /* 角を丸くする */
+  padding: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* 軽い影をつける */
+  transition: transform 0.2s, box-shadow 0.2s; /* アニメーションの時間 */
+}
+
+/* マウスカーソルを載せた（ホバー）時のエフェクト */
+.card:hover {
+  transform: translateY(-5px); /* 上に5ピクセル浮かせる */
+  box-shadow: 0 8px 15px rgba(0,0,0,0.2); /* 影を強くする */
+}
+
+.word {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+/* 🌙 ダークモード用の配色設定（端末がダークモードの時に自動適用） */
+@media (prefers-color-scheme: dark) {
+  body { background: #121212; color: #eee; }
+  #search { background: #1e1e1e; color: #fff; border: 1px solid #333;}
+  .card { background: #1e1e1e; }
+}
+
+/* 📱 ポップアップ（モーダルウィンドウ）の背景 */
+.popup {
+  display: none;      /* 初期状態は非表示 */
+  position: fixed;    /* 画面に固定 */
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.6); /* 背景を黒の半透明にする */
+}
+
+/* ポップアップのコンテンツ表示エリア */
+.popup-content {
+  background:white;
+  margin: 5% auto;     /* 上下に余白を作って中央寄せ */
+  padding:20px;
+  width: 60%;          /* 画面幅の60% */
+  max-width: 800px;    /* 最大幅の上限 */
+  border-radius:10px;
+  height: auto;        /* 中身に応じて高さを自動調整 */
+  max-height: 80%;     /* 画面からはみ出さないように上限を設定 */
+  overflow-y: auto;    /* 縦に長くなったらスクロールバーを出す */
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* 閉じるボタン（×）のスタイル */
+#close {
+  float:right;        /* 右上に寄せる */
+  font-size:20px;
+  cursor:pointer;     /* マウスを乗せたら指先マークにする */
+}
+
+/* 動詞の活用形を表示する2列のテーブルスタイル */
+.forms-table {
+  width: 100%;
+  border-collapse: collapse; /* 枠線を1本にまとめる */
+  margin-top: 15px;
+}
+.forms-table th, .forms-table td {
+  border: 1px solid #ddd;   /* 薄いグレーの枠線 */
+  padding: 10px;
+  text-align: left;
+}
+.forms-table th {
+  background-color: #f2f2f2; /* ヘッダーの背景 */
+}
+
+.form-word {
+  font-size: 1.1em;
+}
+
+/* 斜体を解除し、訳文と同じフォントサイズ（1em）に統一 */
+.ex-en {
+  font-style: normal; 
+  font-weight: bold;
+  font-size: 1em;
+}
+
+/* 英文と同じフォントサイズ（1em）に統一 */
+.ex-jp {
+  color: #666;        /* 日本語訳を少し薄い色にする */
+  font-size: 1em;
+}
+
+/* 通常の単語用の例文エリア（余白をきれいに保つ） */
+.normal-example-area {
+  margin-top: 15px;
+}
+/* 通常の単語表示時に、pタグ内のマージンでフォントサイズがズレるのを防ぐ設定 */
+.normal-example-area p {
+  margin: 5px 0;
+}
+
+/* 🌙 ダークモード時のポップアップ内スタイル */
+@media (prefers-color-scheme: dark) {
+  .popup-content { background: #1e1e1e; color: #fff; }
+  .forms-table th, .forms-table td { border: 1px solid #444; }
+  .forms-table th { background-color: #2a2a2a; }
+  .ex-jp { color: #aaa; }
+}
+</style>
+</head>
+
+<body>
+
+<h1>📘 英語辞典</h1>
+
+<input type="text" id="search" placeholder="単語・意味・品詞で検索">
+
+<div id="list"></div>
+
+<div id="popup" class="popup">
+  <div class="popup-content">
+    <span id="close">&times;</span>
+    <div id="popup-body"></div>
+  </div>
+</div>
+
+<!-- 💡 各データファイルを読み込んでから、最後にメイン処理を動かします -->
+<script src="v1.js"></script>
+<script src="v2.js"></script>
+<script src="v3.js"></script>
+<script src="v4.js"></script>
+<script src="va.js"></script>
+<script src="article.js"></script>
+<script src="n1.js"></script>
+<script src="n2.js"></script>
+<script src="n3.js"></script>
+<script src="n4.js"></script>
+<script src="n5.js"></script>
+<script src="n6.js"></script>
+<script src="n7.js"></script>
+<script src="n8.js"></script>
+<script src="n9.js"></script>
+<script src="n10.js"></script>
+<script src="na.js"></script>
+<script src="a1.js"></script>
+<script src="a2.js"></script>
+<script src="aa.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
