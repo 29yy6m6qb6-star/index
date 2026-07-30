@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>百ます計算 印刷</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<h1>百ます計算 印刷</h1>
+
+<div class="toolbar">
+
+<label>計算</label>
+
+<select id="mode">
+<option value="+">足し算</option>
+<option value="-">引き算</option>
+<option value="*" selected>掛け算</option>
+</select>
+
+<label>枚数</label>
+
+<select id="count">
+<option>2</option>
+<option>10</option>
+<option>20</option>
+<option>50</option>
+<option>100</option>
+<option>200</option>
+<option>500</option>
+<option>1000</option>
+<option>2000</option>
+</select>
+
+<button id="createBtn">
+問題作成
+</button>
+
+<button onclick="window.print()">
+印刷
+</button>
+
+</div>
+
+<div id="pages"></div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
